@@ -1,7 +1,7 @@
 
 
 #definir los tests de py.test con el prefijo "test_"
-def tes_plus_is_operator():
+def test_plus_is_operator():
     assert is_operator('+')
 
 def test_is_not_operator():
