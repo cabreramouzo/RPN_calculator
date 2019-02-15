@@ -7,11 +7,6 @@ def test_plus_is_operator():
 def test_is_not_operator():
     assert not is_operator(42)
 
-# def test_compute_block_from_string():
-#     assert compute('3 4 +') == 7
-
-# def test_compute_block_from_string_2():
-#     assert compute('3 3 -') == 0
 
 def test_convert_string42_to_int():
     assert s2i('42') == 42
@@ -44,7 +39,7 @@ def test_is_operator1():
     assert not is_operator('3') # no puc posar  ==false
     
 def test_is_operator2():
-    assert not is_operator('8')
+    assert is_operator('8') == False
     
 def test_is_operator3():
     assert not is_operator(8)
@@ -109,6 +104,20 @@ def test_read_block2():
 
 
 
+def test_prform_rpn1():
+    assert perform_rpn([3, 4, '+']) == 7
+
+def test_prform_rpn2():
+    assert perform_rpn([4, 2, '+', 3, '-']) == 3
+    
+def test_prform_rpn3():
+    assert perform_rpn([8, 2, 5, 3, '+', '+', '+']) == 18
+
+def test_prform_rpn4():
+    assert perform_rpn([2,1,12,3,'/','-','+']) == -1
+   
+def test_prform_rpn5():
+    assert perform_rpn([8 ,2, '/', 9, '*', 36, 3, '/', '+', 8, 6, '*', 11, '/', '-']) == 43.64
 
 
 def s2i(s):
@@ -151,18 +160,7 @@ def convert_string_list_to_rpn_list(str_list):
 
 
 def is_valid_rpn_stack(s):
-    
-    #return  is_operator(s[-1]) and len(s) >= 3
-    if len(s) >= 3:
-        return is_operator(s[-1])
-    else: 
-        return len(s) >= 3
-
-
-
-
-
-
+    return len(s) >= 3 and is_operator(s[-1])
 
 #pre: s es una llista(stack) rpn computable vàlida 
 def compute_stack(s):
@@ -173,7 +171,6 @@ def compute_stack(s):
     res = perform_operation(op1, op2, operator)
     s.append(res)
     return s
-
 
 
 
@@ -196,7 +193,6 @@ def extract_rpn_block(rpn_list, rpn_stack):
 
 
 
-
 def compute_block(op_array):
     op1, op2, operator = op_array
     return perform_operation(op1, op2, operator)
@@ -204,24 +200,6 @@ def compute_block(op_array):
 # def compute(input_string):
 #     op_array = read_rpn_block(input_string)
 #     return compute_block(op_array)
-
-
-def test_prform_rpn1():
-    assert perform_rpn([3, 4, '+']) == 7
-
-def test_prform_rpn2():
-    assert perform_rpn([4, 2, '+', 3, '-']) == 3
-    
-def test_prform_rpn3():
-    assert perform_rpn([8, 2, 5, 3, '+', '+', '+']) == 18
-
-def test_prform_rpn4():
-    assert perform_rpn([2,1,12,3,'/','-','+']) == -1
-   
-def test_prform_rpn5():
-    assert perform_rpn([8 ,2, '/', 9, '*', 36, 3, '/', '+', 8, 6, '*', 11, '/', '-']) == 43.64
-
-
 
 
 
@@ -238,24 +216,22 @@ def perform_rpn(rpn_list):
     result = '%.2f'%(result)
     return float(result)
 
+def xtest_main1():
+    pass
+    #assert main("2 1 12 3 / - +") == '-1'
+
+def prompt(str):
+    return input(str)
 
 def main():
-    #pass
-
-    #rpn_stack = read_stack("hola")
-    #rpn_list = [3,5,8, '*', 7,'+', '*']
-    #array_rpn = read_rpn_block(rpn_list)
-    #result = calc_rpn(rpn_stack)
-    #print (result)
-
-
-    #for line in sys.stdin:
-        #cs = line.split()
-
-    rpn_str = "3 5 8 * 7 + *"
-    rpn_l = convert_rpn_string_to_rpn_list(rpn_str)
-    result = perform_rpn(rpn_l)
-    print (result)
+    print("quit to quit")
+    while True:    
+        s = prompt('> ')
+        if s == "quit":
+            break
+        rpn_l = convert_rpn_string_to_rpn_list(s)
+        result = perform_rpn(rpn_l)
+        print (result)
 
 if __name__ == '__main__':
     main()
