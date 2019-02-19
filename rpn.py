@@ -126,7 +126,7 @@ def s2i(s):
 def is_operator(item):
     # "/"-> true, 3-> false, "3" -> true :(
     #return type(item) == str
-    return item == '+' or item == '-' or item == '*' or item == '/'
+    return item in {'+', '-', '*', '/'}
     
 
 def perform_operation(op1, op2, operator):
@@ -203,6 +203,41 @@ def compute_block(op_array):
 
 
 
+
+def test_form_infix_string():
+    assert form_infix_string(3,4,'+') == "(3+4)"
+
+def test_form_infix_string2():
+    assert form_infix_string("(3+4)",4,'+') == "((3+4)+4)"
+
+def test_form_infix_string3():
+    assert form_infix_string("(3+4)","(8/2)",'*') == "((3+4)*(8/2))"
+
+def form_infix_string(op1, op2, operand):
+    op1 = str(op1)
+    op2 = str(op2)
+    return '(' + op1 + operand + op2 + ')'
+
+
+def test_convert_postfix_list_to_string():
+    assert convert_postfix_list_to_string( ['(' , '(3+4)' , '*', '(8*2)', ')'] ) == "(3+4)*(8*2)"
+
+def test_convert_postfix_list_to_string2():
+    assert convert_postfix_list_to_string( ['(' , '(3+4)' , '*', '8', ')'] ) == "(3+4)*8"
+
+def xtest_convert_postfix_list_to_string3():
+    assert convert_postfix_list_to_string( ['(6*2)' , '/', '(2*2)'] ) == "(6*2)/(2*2)"
+    
+
+
+def test_convert_postfix_to_infix():
+   assert convert_string_postfix_to_infix("3 4 5 + +") == "3+(4+5)"
+
+def test_convert_postfix_to_infix2():
+    assert convert_string_postfix_to_infix("3 5 8 * 7 + *") == "3*((5*8)+7)"
+
+
+
 def perform_rpn(rpn_list):
     rpn_stack = []
     while len(rpn_list) > 1 or len(rpn_stack) > 1 :
@@ -216,12 +251,43 @@ def perform_rpn(rpn_list):
     result = '%.2f'%(result)
     return float(result)
 
+def convert_postfix_list_to_string(l): 
+    res = ''
+    for item in l:
+        #res += l.pop(0)
+        res += item
+
+    #chapusa per treure el primer parentesis i el ultim
+    if res.startswith('(') and res.endswith(')'):
+        res = res[1:-1]
+
+    return res
+
+
 def xtest_main1():
     pass
     #assert main("2 1 12 3 / - +") == '-1'
 
 def prompt(str):
     return input(str)
+
+def convert_string_postfix_to_infix(s):
+
+    postfix_list = convert_rpn_string_to_rpn_list(s)
+    postfix_stack = []
+
+    while len(postfix_list) >= 1 : 
+        item = postfix_list.pop(0)
+        if not is_operator(item): #item is an operand
+            postfix_stack.append(item)
+        else: #item is an operator or an infix operand block
+            op2 = postfix_stack.pop()
+            op1 = postfix_stack.pop()
+            infix_op = form_infix_string(op1, op2, item)
+            postfix_stack.append(infix_op)
+    
+    result_in_string = convert_postfix_list_to_string(postfix_stack)
+    return result_in_string
 
 def main():
     print("quit to quit")
@@ -230,8 +296,10 @@ def main():
         if s == "quit":
             break
         rpn_l = convert_rpn_string_to_rpn_list(s)
+        infix_exp = convert_string_postfix_to_infix(s)
         result = perform_rpn(rpn_l)
-        print (result)
+        print ( str(infix_exp) + ' = ' + str(result) )
+
 
 if __name__ == '__main__':
     main()
