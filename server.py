@@ -1,12 +1,15 @@
 import http.server
 import socketserver
+import logging
+
+log = logging.getLogger(__file__)
 
 PORT = 8000
-
-#Handler = http.server.SimpleHTTPRequestHandler
-
 class Handler(http.server.SimpleHTTPRequestHandler):
-    pass
+
+    def do_GET(self):
+        print("Requested path: {}".format(self.path))
+        super().do_GET()
 
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print("serving at port", PORT)
