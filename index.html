@@ -8,8 +8,6 @@
               <td colspan="4">
                   <form name="RPN_Calculator" action="/calculate" method="POST">
                  <input type="text" name="display" id="display" value="" />
-                 <td><input type="submit" value="="></td>
-                </form>
               </td>
            </tr>
            <tr>
@@ -34,6 +32,8 @@
                  <td><input type="button" id="clear" name="clear" value="C" onclick="RPN_Calculator.display.value = '' "></td>
                  <td><input type="button" name="zero" value="0" onclick="RPN_Calculator.display.value += '0' "></td>                 
                  <td><input type="button" class="operator" name="div" value="/" onclick="RPN_Calculator.display.value += '/'"></td>
+                 <td><input type="submit" value="="></td>
+            </form>
            </tr>
         </table>        
      

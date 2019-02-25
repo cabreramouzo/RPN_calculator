@@ -2,6 +2,9 @@ import http.server
 import socketserver
 import logging
 
+#importo les funcions del rpn
+from rpn import convert_rpn_string_to_rpn_list, perform_rpn
+
 
 log = logging.getLogger(__file__)
 
@@ -10,6 +13,7 @@ def unescape_ops(s):
     # ! 	# 	    $ 	     & 	    ' 	    ( 	    ) 	    * 	    + 	    , 	    / 	    : 	    ; 	    = 	    ? 	   @ 	    [ 	    ]
     # %21 	%23 	%24 	%26 	%27 	%28 	%29 	%2A 	%2B 	%2C 	%2F 	%3A 	%3B 	%3D 	%3F 	%40 	%5B 	%5D
     return s.replace('+', ' ').replace('%2A', '*').replace('%2B', '+')
+    #TODO: entendre la linea de dalt
 
 PORT = 8000
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -42,19 +46,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         print(f'post: {post}')
         rpn_exp = unescape_ops(post['display'])
         print(rpn_exp)
-        # print(self.rfile)
-        # self.rfile
 
-        
-
-
-
+        #crido a rpn.py...
+        rpn_l = convert_rpn_string_to_rpn_list(rpn_exp)
+        result_rpn = perform_rpn(rpn_l)
+        print("resultado" + str(result_rpn))
 
         self.send_response(200)
         self.send_header('Content-type', 'text/html; charset=utf-8')
         self.end_headers()
         #replico la pagina de la UI original LOL
-        resp = """
+        resp1 = """
         <html>
     <head>
     </head>
@@ -65,8 +67,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
               <td colspan="4">
                   <form name="RPN_Calculator" action="/calculate" method="POST">
                  <input type="text" name="display" id="display" value="" />
-                 <td><input type="submit" value="="></td>
-                </form>
+                 <h3>
+                 """
+        h2_text = str(result_rpn) 
+        resp2 = """
+                  <h3>
               </td>
            </tr>
            <tr>
@@ -91,13 +96,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                  <td><input type="button" id="clear" name="clear" value="C" onclick="RPN_Calculator.display.value = '' "></td>
                  <td><input type="button" name="zero" value="0" onclick="RPN_Calculator.display.value += '0' "></td>                 
                  <td><input type="button" class="operator" name="div" value="/" onclick="RPN_Calculator.display.value += '/'"></td>
+                 <td><input type="submit" value="="></td>
+                </form>
            </tr>
         </table>        
      
 </body>
 </html>
         """
-        response = bytearray(resp, 'utf-8')
+        response_aux = resp1 + h2_text + resp2
+        response = bytearray(response_aux, 'utf-8')
         self.wfile.write(response)
         return
 
