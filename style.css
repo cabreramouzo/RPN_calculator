@@ -1,3 +1,10 @@
+
+h3 {
+  color: white;
+  font-family: verdana;
+  font-size: 100%;
+}
+
 body {
   background-color: #888;
 }
@@ -85,13 +92,17 @@ input:active {
 }
 
 .operator {
-  background-color: #cee9ea;
+  /*background-color: #cee9ea;*/
+  background-color: FFA500;
   position: relative;
 }
 
+/*quan passes el cursor per sobre*/
 .operator:hover {
-  background-color: #cee9ea;
-  box-shadow: 0 4px #b0d2cf;
+  /*background-color: #cee9ea;*/
+  background-color : #FFA500;
+  /*box-shadow: 0 4px #b0d2cf;*/
+  box-shadow: 0 4px #FF8C00;
 }
 
 .operator:active {

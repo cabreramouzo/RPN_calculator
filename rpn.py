@@ -301,6 +301,18 @@ def main():
         print ( str(infix_exp) + ' = ' + str(result) )
 
 
+def calculate_response(input):
+    rpn_l = convert_rpn_string_to_rpn_list(input)
+    output = perform_rpn(rpn_l)
+    return output
+
+def test_rpn_calc():
+    assert calculate_response('2 2 +') == 4
+
+def test_rpn_calc2():
+    assert calculate_response('2 3 *') == 6
+
+
 if __name__ == '__main__':
     main()
     
